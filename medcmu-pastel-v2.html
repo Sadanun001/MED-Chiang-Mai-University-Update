@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คณะแพทยศาสตร์ มช. — MeDHRI Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Noto+Serif+Thai:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   DESIGN SYSTEM — Pastel Medical 2025
+   Soft sky · mint · blush · clean white
+   ══════════════════════════════════════════ */
+:root {
+  /* Text */
+  --ink:    #2c3e60;
+  --ink2:   #3d5278;
+  --ink3:   #4e6a9a;
+  --slate:  #7a8fa8;
+
+  /* Accent – teal (MeDHRI identity) */
+  --teal:   #2faa97;
+  --teal-d: #1e8a79;
+  --teal-l: #e4f7f5;
+  --teal-m: #b2ece6;
+
+  /* Accent – rose (dean/admin) */
+  --rose:   #e07580;
+  --rose-l: #fdeef0;
+
+  /* Accent – blue (CMU identity) */
+  --blue:   #4a7fc1;
+  --blue-l: #e8f0fb;
+  --blue-m: #c5d8f5;
+
+  /* Neutral */
+  --bg:     #f4f7fd;
+  --bg2:    #edf1f9;
+  --white:  #ffffff;
+  --border: #dde5f2;
+  --card:   #ffffff;
+
+  /* Pastel palette for cards */
+  --p-sky:    #deeeff;
+  --p-mint:   #d6f5f0;
+  --p-blush:  #fde6e9;
+  --p-lav:    #ece6ff;
+  --p-amber:  #fef3d0;
+  --p-sage:   #ddf2e8;
+  --p-peach:  #fde8d8;
+  --p-lilac:  #f0e8ff;
+
+  /* Shadows */
+  --sh-xs: 0 1px 4px rgba(44,62,96,.06);
+  --sh-sm: 0 2px 10px rgba(44,62,96,.08);
+  --sh:    0 4px 20px rgba(44,62,96,.10);
+  --sh-lg: 0 10px 40px rgba(44,62,96,.13);
+
+  /* Radius */
+  --r:  14px;
+  --r2: 10px;
+  --r3: 7px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.65; }
+
+/* ── HERO ── */
+.hero {
+  position: relative; overflow: hidden; padding: 0;
+  background: linear-gradient(130deg, #c5d8f5 0%, #b8e8e0 45%, #d8d0f6 100%);
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 10% 70%, rgba(255,255,255,.55) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 90% 10%, rgba(255,255,255,.35) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  min-height: 250px;
+}
+
+/* Hero Left – title block */
+.hero-left {
+  padding: 48px 48px 40px;
+  position: relative; z-index: 2;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.65);
+  border: 1px solid rgba(255,255,255,.85);
+  color: var(--teal-d);
+  padding: 4px 13px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Noto Serif Thai', serif;
+  color: var(--ink); font-size: 27px; font-weight: 700;
+  line-height: 1.35; margin-bottom: 4px;
+}
+.hero h2 { color: var(--ink2); font-size: 13px; font-weight: 400; opacity: .70; margin-bottom: 20px; }
+.hero-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.hero-tag {
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.80);
+  color: var(--ink2);
+  padding: 3px 10px; border-radius: 6px; font-size: 11px;
+}
+
+/* Hero Right – clickable nav tiles */
+.hero-right {
+  background: rgba(255,255,255,.20);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-left: 1px solid rgba(255,255,255,.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 28px 28px;
+  position: relative; z-index: 2;
+}
+.hero-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px; width: 100%;
+}
+/* Default tile = white */
+.htile {
+  background: var(--white);
+  border-radius: var(--r2);
+  border: 1.5px solid rgba(255,255,255,.90);
+  box-shadow: var(--sh);
+  padding: 18px 14px 16px;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 7px;
+  transition: transform .18s, box-shadow .18s, border-color .18s;
+  min-height: 96px; color: var(--ink);
+}
+.htile:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sh-lg);
+  border-color: var(--blue-m);
+}
+/* MeDHRI tile = pastel teal */
+.htile.medhri {
+  background: var(--p-mint);
+  border-color: var(--teal-m);
+}
+.htile.medhri:hover { border-color: var(--teal); }
+
+.htile-icon { font-size: 22px; line-height: 1; }
+.htile-title { font-size: 12px; font-weight: 700; color: var(--ink); line-height: 1.3; }
+.htile-sub { font-size: 10px; color: var(--slate); }
+
+/* ── NAV ── */
+.nav-wrap {
+  background: rgba(255,255,255,.93);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 300;
+  box-shadow: 0 2px 10px rgba(44,62,96,.06);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center;
+  padding: 0 32px; overflow-x: auto;
+}
+.nav-logo {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; font-weight: 500;
+  color: var(--teal); letter-spacing: 1px;
+  white-space: nowrap; padding: 16px 20px 16px 0;
+  border-right: 1px solid var(--border); margin-right: 6px;
+}
+.nav-btn {
+  padding: 17px 20px; border: none; background: none;
+  cursor: pointer; font-family: 'Sarabun', sans-serif;
+  font-size: 13px; font-weight: 600; color: var(--slate);
+  border-bottom: 2.5px solid transparent;
+  transition: all .16s; white-space: nowrap;
+  position: relative; top: 1px;
+}
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+
+/* ── PAGES ── */
+.page { display: none; }
+.page.active { display: block; }
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 32px 64px; }
+
+/* ── SECTION HEADER ── */
+.sec-hd { margin-bottom: 24px; }
+.sec-hd h2 {
+  font-family: 'Noto Serif Thai', serif;
+  font-size: 21px; font-weight: 700; color: var(--ink);
+  display: flex; align-items: center; gap: 10px;
+}
+.sec-hd h2::before {
+  content: ''; display: block;
+  width: 4px; height: 24px;
+  background: var(--teal); border-radius: 2px; flex-shrink: 0;
+}
+.sec-hd p { color: var(--slate); font-size: 12px; margin-top: 5px; padding-left: 14px; }
+.vpill {
+  display: inline-block;
+  background: var(--teal-l); color: var(--teal-d);
+  border-radius: 4px; font-size: 10px; font-weight: 700;
+  padding: 1px 7px; margin-left: 7px; vertical-align: middle;
+}
+
+/* ── TREE / ORG CHART ── */
+.tree { display: flex; flex-direction: column; align-items: center; }
+.vconn { width: 2px; height: 20px; background: var(--teal-m); }
+.vconn-sm { width: 2px; height: 14px; background: var(--border); }
+
+/* Node types */
+.n-uni {
+  background: var(--p-sky);
+  border: 1.5px solid var(--blue-m);
+  border-radius: var(--r); padding: 13px 32px;
+  text-align: center; min-width: 220px;
+  box-shadow: var(--sh-sm);
+}
+.n-uni strong { font-size: 14px; display: block; color: var(--ink); }
+.n-uni span { font-size: 11px; color: var(--slate); }
+
+.n-dean {
+  background: var(--white);
+  border: 2px solid var(--rose);
+  border-radius: var(--r); padding: 18px 36px;
+  text-align: center; min-width: 320px;
+  box-shadow: var(--sh-lg);
+}
+.n-dean .ttl { font-size: 13px; font-weight: 700; color: var(--rose); margin-bottom: 5px; }
+.n-dean .nm  { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 3px; }
+.n-dean .nm2 { font-size: 11px; color: var(--slate); margin-bottom: 6px; }
+.n-dean .ct  { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--slate); }
+
+.n-std {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r2); padding: 11px 16px;
+  text-align: center; min-width: 160px;
+  box-shadow: var(--sh-xs); font-size: 12.5px;
+  font-weight: 600; color: var(--ink);
+}
+.n-std .rl { font-size: 10px; color: var(--slate); font-weight: 400; }
+
+/* Deputy grid */
+.dep-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 9px; max-width: 960px; margin: 0 auto;
+}
+@media(max-width:900px) { .dep-grid { grid-template-columns: repeat(2,1fr); } }
+
+.dep-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r2); padding: 13px 14px;
+  font-size: 12px; font-weight: 600; color: var(--ink);
+  box-shadow: var(--sh-xs);
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.dep-card:hover { border-color: var(--blue); box-shadow: var(--sh); transform: translateY(-2px); }
+.dep-card .role { font-size: 10px; color: var(--slate); font-weight: 400; margin-top: 2px; }
+.dep-card .who  { font-size: 10.5px; color: var(--blue); font-weight: 600; margin-top: 5px; }
+
+/* MeDHRI highlighted dep card */
+.dep-card.hl-teal {
+  background: var(--p-mint);
+  border-color: var(--teal-m);
+}
+.dep-card.hl-teal .who { color: var(--teal-d); }
+.dep-card.hl-teal:hover { border-color: var(--teal); }
+
+/* Hospital highlighted */
+.dep-card.hl-rose {
+  background: var(--p-blush);
+  border-color: #f5c0c5;
+}
+.dep-card.hl-rose .who { color: var(--rose); }
+
+.unit-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; max-width: 960px; margin: 0 auto; }
+@media(max-width:900px) { .unit-grid { grid-template-columns: repeat(2,1fr); } }
+
+.dept-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; max-width: 900px; margin: 0 auto; }
+@media(max-width:760px) { .dept-grid { grid-template-columns: repeat(3,1fr); } }
+.dept-tag {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 6px; padding: 7px 8px; font-size: 11px;
+  font-weight: 500; color: var(--ink); text-align: center;
+  transition: background .14s, border-color .14s;
+}
+.dept-tag:hover { background: var(--teal-l); border-color: var(--teal-m); }
+
+.tree-lbl {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--slate);
+  margin: 20px 0 10px;
+}
+
+/* H-branch connector */
+.h-branch {
+  display: flex; align-items: flex-start;
+  justify-content: center; gap: 10px;
+  flex-wrap: wrap; position: relative;
+}
+.h-branch::before {
+  content: ''; position: absolute; top: 0;
+  left: 12%; width: 76%; height: 1px;
+  background: var(--border);
+}
+.branch-col { display: flex; flex-direction: column; align-items: center; }
+
+/* ── VMC CARDS ── */
+.vmc-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+@media(max-width:760px) { .vmc-2col { grid-template-columns: 1fr; } }
+
+.vm-card {
+  border-radius: var(--r); padding: 28px;
+  box-shadow: var(--sh);
+}
+.vm-vision { background: var(--p-sky); border: 1.5px solid var(--blue-m); }
+.vm-mission { background: var(--white); border: 1.5px solid var(--border); }
+
+.vm-ey { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+.vm-vision .vm-ey { color: var(--blue); }
+.vm-mission .vm-ey { color: var(--rose); }
+
+.vm-q {
+  font-family: 'Noto Serif Thai', serif;
+  font-size: 16px; line-height: 1.55; color: var(--ink); margin-bottom: 10px;
+}
+.vm-sub { font-size: 12px; color: var(--slate); font-style: italic; }
+
+.vm-src {
+  margin-top: 16px; padding: 12px 14px;
+  background: rgba(47,170,151,.10); border-radius: 9px;
+  border: 1px solid rgba(47,170,151,.22);
+}
+.vm-src .lbl { font-size: 9.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--teal-d); margin-bottom: 5px; }
+.vm-src p { font-size: 11.5px; color: var(--ink2); line-height: 1.65; }
+
+.mi-row {
+  background: var(--bg2); border-radius: var(--r2);
+  padding: 11px 14px; margin-bottom: 8px;
+  display: flex; gap: 12px; align-items: flex-start;
+  border-left: 4px solid var(--rose);
+}
+.mi-row.teal { border-left-color: var(--teal); }
+.mi-row.blue { border-left-color: var(--blue); }
+.mi-let {
+  font-family: 'DM Mono', monospace;
+  font-size: 22px; font-weight: 500; line-height: 1;
+  flex-shrink: 0; width: 30px; padding-top: 2px;
+}
+.mi-row .mi-let { color: var(--rose); }
+.mi-row.teal .mi-let { color: var(--teal-d); }
+.mi-row.blue .mi-let { color: var(--blue); }
+.mi-t { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.mi-s { font-size: 11px; color: var(--slate); }
+
+/* Strategy bar */
+.strat-bar {
+  background: var(--p-sky); border: 1.5px solid var(--blue-m);
+  border-radius: var(--r); padding: 22px 24px 18px;
+  margin-bottom: 22px;
+  display: grid; grid-template-columns: repeat(6,1fr); gap: 8px;
+}
+@media(max-width:640px) { .strat-bar { grid-template-columns: repeat(3,1fr); } }
+.strat-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--slate);
+  margin-bottom: 10px; grid-column: 1/-1;
+}
+.sc {
+  background: rgba(255,255,255,.70); border: 1px solid rgba(255,255,255,.90);
+  border-radius: var(--r2); padding: 13px 6px; text-align: center;
+}
+.sc.hi { background: var(--teal-l); border-color: var(--teal-m); }
+.sc-L { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500; color: var(--blue); line-height: 1; }
+.sc.hi .sc-L { color: var(--teal-d); }
+.sc-w { font-size: 9px; color: var(--slate); margin-top: 4px; line-height: 1.3; }
+
+/* Core Value grid */
+.cv-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+@media(max-width:760px) { .cv-grid { grid-template-columns: repeat(2,1fr); } }
+
+.cv-card {
+  border-radius: var(--r); padding: 22px 18px;
+  position: relative; overflow: hidden;
+  box-shadow: var(--sh-xs);
+  transition: transform .15s, box-shadow .15s;
+  border: 1.5px solid transparent;
+}
+.cv-card:hover { transform: translateY(-3px); box-shadow: var(--sh); }
+.cv-bg { font-family: 'DM Mono', monospace; font-size: 72px; font-weight: 500; position: absolute; top: -12px; right: -4px; opacity: .07; line-height: 1; color: currentColor; }
+.cv-badge { font-family: 'DM Mono', monospace; font-size: 26px; font-weight: 500; line-height: 1; margin-bottom: 8px; }
+.cv-title { font-size: 13.5px; font-weight: 800; margin-bottom: 2px; }
+.cv-en { font-size: 10px; font-weight: 600; letter-spacing: .4px; opacity: .65; margin-bottom: 8px; }
+.cv-desc { font-size: 11.5px; line-height: 1.65; }
+
+.cv-C { background: var(--p-sky); color: #2a5fb0; border-color: var(--blue-m); }
+.cv-Q { background: var(--p-mint); color: var(--teal-d); border-color: var(--teal-m); }
+.cv-I { background: var(--p-amber); color: #9a6200; border-color: #f5dfa0; }
+.cv-T { background: var(--p-lav); color: #5b35b0; border-color: #c8baee; }
+
+/* E-CMU */
+.ecmu-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 11px; }
+@media(max-width:760px) { .ecmu-grid { grid-template-columns: repeat(2,1fr); } }
+.ec-card {
+  border-radius: var(--r2); padding: 18px 14px; text-align: center;
+  border: 2px solid; box-shadow: var(--sh-xs);
+  transition: transform .15s;
+}
+.ec-card:hover { transform: translateY(-2px); }
+.ec-L { font-family: 'DM Mono', monospace; font-size: 34px; font-weight: 500; line-height: 1; margin-bottom: 5px; }
+.ec-w { font-size: 13px; font-weight: 800; margin-bottom: 2px; }
+.ec-e-s { font-size: 10px; font-weight: 600; letter-spacing: .3px; opacity: .65; margin-bottom: 7px; }
+.ec-desc { font-size: 11.5px; line-height: 1.55; }
+.ec-E { background: #fff7ed; border-color: #fba060; color: #7c2d12; }
+.ec-C { background: #fdf4ff; border-color: #d946c0; color: #4a044e; }
+.ec-M { background: #fffbeb; border-color: #ca8a04; color: #78350f; }
+.ec-U { background: #f0f9ff; border-color: #38b2f0; color: #0c4a6e; }
+
+/* ── MeDHRI HERO ── */
+.medhri-top {
+  background: var(--p-mint);
+  border: 2px solid var(--teal-m);
+  border-radius: var(--r); padding: 34px 40px 28px;
+  text-align: center; position: relative; overflow: hidden;
+  box-shadow: var(--sh); margin-bottom: 24px;
+}
+.medhri-top::after {
+  content: 'MeDHRI';
+  font-family: 'DM Mono', monospace; font-size: 110px;
+  font-weight: 500; position: absolute; bottom: -28px; right: -10px;
+  opacity: .06; color: var(--teal); line-height: 1; white-space: nowrap;
+}
+.medhri-top .ey { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--teal-d); margin-bottom: 12px; }
+.medhri-top .qt { font-family: 'Noto Serif Thai', serif; font-size: 19px; font-weight: 700; color: var(--ink); line-height: 1.55; margin-bottom: 10px; }
+.medhri-top .en { font-size: 12px; color: var(--slate); font-style: italic; }
+
+/* M3 Mission */
+.m3-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
+@media(max-width:760px) { .m3-grid { grid-template-columns: 1fr; } }
+.m3 {
+  background: var(--white); border-radius: var(--r); padding: 20px 18px;
+  border-left: 5px solid var(--teal); box-shadow: var(--sh-xs);
+  position: relative; overflow: hidden;
+}
+.m3-n {
+  font-family: 'DM Mono', monospace; font-size: 54px; font-weight: 500;
+  color: var(--teal); opacity: .07;
+  position: absolute; bottom: -14px; right: 4px; line-height: 1;
+}
+.m3 h4 { font-size: 13.5px; font-weight: 800; color: var(--teal-d); margin-bottom: 7px; }
+.m3 p  { font-size: 12.5px; color: var(--slate); line-height: 1.75; }
+
+/* Pillars */
+.pillar-row { display: flex; gap: 11px; flex-wrap: wrap; margin-bottom: 22px; }
+.pillar { flex: 1; min-width: 170px; background: var(--white); border-radius: var(--r2); padding: 15px 16px; border-left: 5px solid; box-shadow: var(--sh-xs); }
+.pl-t { border-left-color: var(--teal); }
+.pl-g { border-left-color: #c9973a; }
+.pl-p { border-left-color: #7c3aed; }
+.pillar h5 { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.pillar p  { font-size: 11.5px; color: var(--slate); }
+
+/* Services */
+.svc-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 11px; }
+@media(max-width:760px) { .svc-grid { grid-template-columns: repeat(2,1fr); } }
+.svc {
+  background: var(--white); border-radius: var(--r2); padding: 18px 14px; text-align: center;
+  border-top: 4px solid; box-shadow: var(--sh-xs);
+  transition: transform .15s;
+}
+.svc:hover { transform: translateY(-2px); }
+.svc-i { font-size: 26px; margin-bottom: 7px; }
+.svc-t { font-size: 12.5px; font-weight: 700; margin-bottom: 2px; color: var(--ink); }
+.svc-s { font-size: 11px; color: var(--slate); }
+.svc-T { border-top-color: var(--teal); }
+.svc-B { border-top-color: var(--blue); }
+.svc-G { border-top-color: #c9973a; }
+.svc-P { border-top-color: #7c3aed; }
+
+/* Team */
+.team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 13px; margin-bottom: 20px; }
+@media(max-width:760px) { .team-grid { grid-template-columns: 1fr; } }
+.team-card {
+  background: var(--white); border-radius: var(--r); padding: 18px 18px;
+  border: 1.5px solid var(--border); box-shadow: var(--sh-xs);
+}
+.team-card.lead { border-color: var(--teal-m); background: var(--teal-l); }
+.team-role { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--teal-d); margin-bottom: 4px; }
+.team-nm   { font-size: 14px; font-weight: 800; color: var(--ink); margin-bottom: 3px; }
+.team-pos  { font-size: 11.5px; color: var(--slate); line-height: 1.5; }
+
+/* Group titles */
+.group-title {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--teal-d);
+  padding-bottom: 7px; margin-top: 14px; margin-bottom: 4px;
+  border-bottom: 1.5px solid var(--teal-l);
+}
+.group-item { font-size: 11.5px; color: var(--slate); padding: 2.5px 0; }
+
+/* Strategic context */
+.strat-ctx {
+  background: var(--p-mint); border: 1.5px solid var(--teal-m);
+  border-radius: var(--r); padding: 22px 24px; margin-bottom: 22px;
+}
+.strat-ctx .lbl { font-size: 11px; font-weight: 700; color: var(--teal-d); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+.strat-ctx .pills { display: flex; gap: 11px; flex-wrap: wrap; }
+.strat-ctx .pill {
+  flex: 1; min-width: 170px; background: var(--white);
+  border-radius: var(--r2); padding: 12px 14px;
+  border-left: 4px solid;
+}
+.pill-t { border-left-color: var(--teal); }
+.pill-g { border-left-color: #c9973a; }
+.pill-p { border-left-color: #7c3aed; }
+.pill h6 { font-size: 12.5px; font-weight: 700; margin-bottom: 3px; }
+.pill-t h6 { color: var(--teal-d); }
+.pill-g h6 { color: #9a6200; }
+.pill-p h6 { color: #5b35b0; }
+.pill p { font-size: 11.5px; color: var(--slate); }
+
+/* ── STAKEHOLDER TABLE ── */
+.stk-wrap {
+  background: var(--white); border-radius: var(--r);
+  border: 1px solid var(--border); overflow: hidden; box-shadow: var(--sh);
+}
+.stk-hd {
+  background: var(--p-sky); border-bottom: 1px solid var(--border);
+  padding: 16px 22px; display: flex; align-items: center; justify-content: space-between;
+}
+.stk-hd h3 { font-size: 14px; font-weight: 700; color: var(--ink); }
+.stk-hd span { font-size: 11.5px; color: var(--slate); }
+
+.stk-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.stk-table th {
+  background: var(--bg2); color: var(--ink2); font-weight: 700;
+  padding: 10px 13px; text-align: left; font-size: 11px;
+  letter-spacing: .3px; border-bottom: 2px solid var(--border);
+}
+.stk-table tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+.stk-table tbody tr:hover { background: #f7f9ff; }
+.stk-table td { padding: 9px 13px; vertical-align: top; }
+.td-cat {
+  background: var(--bg2); font-size: 10.5px; font-weight: 700;
+  color: var(--ink2); letter-spacing: 1px; text-transform: uppercase;
+  padding: 7px 13px; border-bottom: 1px solid var(--border);
+}
+.td-nm { font-weight: 700; color: var(--ink); }
+.td-ps { font-size: 11px; color: var(--slate); }
+.td-rel { font-size: 11.5px; color: var(--ink); line-height: 1.6; }
+
+.badge {
+  display: inline-block; padding: 2px 6px; border-radius: 5px;
+  font-size: 10px; font-weight: 700; margin: 1px;
+}
+.b-int { background: var(--blue-l); color: #1e4fa0; }
+.b-tl  { background: var(--teal-l); color: var(--teal-d); }
+.b-rd  { background: var(--p-blush); color: var(--rose); }
+.b-pu  { background: var(--p-lav); color: #5b21b6; }
+.b-gy  { background: var(--bg2); color: #475569; }
+.b-am  { background: var(--p-amber); color: #9a6200; }
+
+.inf-hi { color: var(--rose); font-weight: 700; font-size: 11px; }
+.inf-md { color: #c9973a; font-weight: 700; font-size: 11px; }
+.inf-lo { color: var(--slate); font-size: 11px; }
+
+/* Legend row */
+.legend-row {
+  background: var(--white); border-radius: var(--r2); border: 1px solid var(--border);
+  padding: 12px 16px; margin-top: 12px;
+  display: flex; gap: 20px; flex-wrap: wrap; font-size: 11.5px; color: var(--slate);
+}
+
+/* ── NOTES ── */
+.note { border-radius: var(--r2); padding: 13px 16px; font-size: 12px; line-height: 1.75; margin-top: 14px; }
+.note strong { font-weight: 700; }
+.note-teal { background: var(--teal-l); border: 1.5px solid var(--teal-m); color: var(--teal-d); }
+.note-amber { background: var(--p-amber); border: 1.5px solid #f0d080; color: #9a6200; }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  color: var(--slate); text-align: center; padding: 20px; font-size: 11px;
+}
+.footer a { color: var(--teal); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .hero-left { padding: 34px 22px; }
+  .container { padding: 28px 16px 48px; }
+  .nav-inner { padding: 0 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ HERO ════ -->
+<div class="hero">
+  <div class="hero-grid">
+    <div class="hero-left">
+      <div class="hero-badge">✓ ข้อมูลอัพเดต · กุมภาพันธ์ 2569</div>
+      <h1 class="serif">คณะแพทยศาสตร์<br>มหาวิทยาลัยเชียงใหม่</h1>
+      <h2>Faculty of Medicine, Chiang Mai University · ศูนย์ MeDHRI · HR Strategy</h2>
+      <div class="hero-tags">
+        <span class="hero-tag">📌 med.cmu.ac.th</span>
+        <span class="hero-tag">🗓 วาระ 2568–2572</span>
+        <span class="hero-tag">🏆 TQC 2562 & 2565</span>
+        <span class="hero-tag">🥈 HR Innovation Silver 2024</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-tiles">
+        <!-- tile 1 – Org (white) -->
+        <a href="#" class="htile" onclick="go('org',document.querySelectorAll('.nav-btn')[0]);return false;">
+          <div class="htile-icon">🏛</div>
+          <div class="htile-title">โครงสร้างองค์กร</div>
+          <div class="htile-sub">Org Chart</div>
+        </a>
+        <!-- tile 2 – VMC (white) -->
+        <a href="#" class="htile" onclick="go('vmc',document.querySelectorAll('.nav-btn')[1]);return false;">
+          <div class="htile-icon">🔭</div>
+          <div class="htile-title">Vision · Mission<br>· Values</div>
+          <div class="htile-sub">VMC & Core Values</div>
+        </a>
+        <!-- tile 3 – MeDHRI (pastel mint) -->
+        <a href="#" class="htile medhri" onclick="go('medhri',document.querySelectorAll('.nav-btn')[2]);return false;">
+          <div class="htile-icon">🎯</div>
+          <div class="htile-title">ศูนย์ MeDHRI</div>
+          <div class="htile-sub">HR Institute</div>
+        </a>
+        <!-- tile 4 – Stakeholders (white) -->
+        <a href="#" class="htile" onclick="go('stk',document.querySelectorAll('.nav-btn')[3]);return false;">
+          <div class="htile-icon">👥</div>
+          <div class="htile-title">Stakeholders</div>
+          <div class="htile-sub">Matrix 19 กลุ่ม</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ NAV ════ -->
+<div class="nav-wrap">
+  <div class="nav-inner">
+    <div class="nav-logo">MedCMU · MeDHRI</div>
+    <button class="nav-btn active" onclick="go('org',this)">🏛 โครงสร้างองค์กร</button>
+    <button class="nav-btn" onclick="go('vmc',this)">🔭 Vision · Mission · Values</button>
+    <button class="nav-btn" onclick="go('medhri',this)">🎯 ศูนย์ MeDHRI</button>
+    <button class="nav-btn" onclick="go('stk',this)">👥 Stakeholders</button>
+  </div>
+</div>
+
+<!-- ══════════════════════
+     PAGE 1 · โครงสร้างองค์กร
+══════════════════════ -->
+<div id="pg-org" class="page active">
+<div class="container">
+  <div class="sec-hd">
+    <h2>แผนผังโครงสร้างองค์กร</h2>
+    <p>วาระบริหาร พ.ศ. 2568–2572 · ยืนยันจาก med.cmu.ac.th/web/about-medcmu/executive-team/ <span class="vpill">✓ verified</span></p>
+  </div>
+
+  <div class="tree">
+    <!-- มช -->
+    <div class="n-uni"><strong>มหาวิทยาลัยเชียงใหม่</strong><span>Chiang Mai University</span></div>
+    <div class="vconn"></div>
+
+    <!-- คณบดี -->
+    <div class="n-dean">
+      <div class="ttl">คณบดีคณะแพทยศาสตร์</div>
+      <div class="nm">รศ.นพ.นเรนทร์ โชติรสนิรมิต</div>
+      <div class="nm2">Assoc. Prof. Narain Chotirosniramit, M.D.</div>
+      <div class="ct">📧 narain.c@cmu.ac.th &nbsp;·&nbsp; ☎ 053-935122</div>
+    </div>
+    <div class="vconn"></div>
+
+    <!-- หน่วยงานกำกับ -->
+    <div class="tree-lbl">หน่วยงานกำกับดูแล</div>
+    <div class="h-branch" style="max-width:680px; margin:0 auto;">
+      <div class="branch-col"><div class="vconn-sm"></div>
+        <div class="n-std">สภาคณะแพทยศาสตร์<div class="rl">Academic Council</div></div>
+      </div>
+      <div class="branch-col"><div class="vconn-sm"></div>
+        <div class="n-std">คุณมะลิวรรณ หินทอง<div class="rl">เลขานุการคณะฯ</div></div>
+      </div>
+      <div class="branch-col"><div class="vconn-sm"></div>
+        <div class="n-std">คณะกรรมการบริหาร HR<div class="rl">HR Management Committee</div></div>
+      </div>
+    </div>
+    <div class="vconn"></div>
+
+    <!-- รองคณบดี -->
+    <div class="tree-lbl">รองคณบดี 12 ท่าน (วาระ พ.ศ. 2568–2572)</div>
+    <div class="dep-grid">
+      <div class="dep-card"><div>ด้านบริหารทั่วไป</div><div class="role">Administration</div><div class="who">รศ.นพ.ณัฐพงศ์ โฆษชุณหนันท์</div></div>
+      <div class="dep-card"><div>ด้านบริหารการเงินและทุน</div><div class="role">Finance & Funding</div><div class="who">ผศ.นพ.วัฒนา ชาติอภิศักดิ์</div></div>
+      <div class="dep-card"><div>ด้านแผนและยุทธศาสตร์</div><div class="role">Plan & Strategy</div><div class="who">ผศ.นพ.สารนาถ ออรพินท์</div></div>
+      <div class="dep-card"><div>ด้านพัฒนาคุณภาพองค์กร</div><div class="role">Organization Quality</div><div class="who">ผศ.นพ.เศรษฐพงศ์ บุญศรี</div></div>
+      <div class="dep-card hl-teal"><div>ด้านทรัพยากรมนุษย์<br>และวัฒนธรรมองค์กร</div><div class="role">HR & Org Culture · กำกับ MeDHRI</div><div class="who">ศ.พญ.สุรินทร์พร ลิขิตเสถียร</div></div>
+      <div class="dep-card"><div>ด้านพัสดุและยานพาหนะ</div><div class="role">Procurement & Vehicles</div><div class="who">ผศ.ดร.ศุภชัย ยอดคีรี</div></div>
+      <div class="dep-card"><div>ด้านกายภาพและสิ่งแวดล้อม</div><div class="role">Physical & Environment</div><div class="who">ผศ.ดร.นพ.ธวัชชัย มั่นอ่ำ</div></div>
+      <div class="dep-card"><div>ด้านเทคโนโลยีสารสนเทศ<br>และบริหารจัดการข้อมูล</div><div class="role">IT & Data Management</div><div class="who">ผศ.นพ.กฤษณ์ ขวัญเงิน</div></div>
+      <div class="dep-card"><div>ด้านวิจัย นวัตกรรม<br>และวิเทศสัมพันธ์</div><div class="role">Research & Innovation</div><div class="who">ศ.ดร.นพ.ดำเนินสันต์ พฤกษากร</div></div>
+      <div class="dep-card"><div>ด้านการศึกษาก่อนปริญญา</div><div class="role">Pre-Graduate Education</div><div class="who">รศ.นพ.เอกรัฐ รัฐฤทธิ์ธำรง</div></div>
+      <div class="dep-card"><div>ด้านการศึกษาหลังปริญญา</div><div class="role">Post-Graduate Education</div><div class="who">รศ.ดร.นพ.อภิชาติ ตันตระวรศิลป์</div></div>
+      <div class="dep-card"><div>ด้านสื่อสารองค์กร</div><div class="role">Communications</div><div class="who">ผศ.พญ.พุดตาน วงศ์ตรีรัตนชัย</div></div>
+    </div>
+    <div class="vconn"></div>
+
+    <!-- หน่วยงานหลัก -->
+    <div class="tree-lbl">หน่วยงานหลักและสถานบริการทางการแพทย์</div>
+    <div class="unit-grid">
+      <div class="dep-card hl-teal"><div>🟢 ศูนย์ MeDHRI</div><div class="role">บริหารกลยุทธ์ HR & พัฒนาบุคลากร</div><div class="who">ชั้น 7 อาคารราชนครินทร์</div></div>
+      <div class="dep-card hl-rose"><div>🏥 รพ.มหาราชนครเชียงใหม่</div><div class="role">ผู้อำนวยการ</div><div class="who">ศ.พญ.อรินทยา พรหมินธิกุล</div></div>
+      <div class="dep-card"><div>⭐ ศูนย์ศรีพัฒน์</div><div class="role">ผู้อำนวยการ</div><div class="who">ผศ.นพ.ธนินนิตย์ ลีรพันธ์</div></div>
+      <div class="dep-card"><div>🏆 ศูนย์ความเป็นเลิศฯ</div><div class="role">ผู้อำนวยการ</div><div class="who">ผศ.นพ.ธนัฐ วานิยะพงศ์</div></div>
+      <div class="dep-card"><div>🔬 ศูนย์วิจัยทางคลินิก (CRC)</div><div class="role">Clinical Research Center</div></div>
+      <div class="dep-card"><div>💻 MTEC</div><div class="role">เทคโนโลยีแพทยศาสตรศึกษา</div></div>
+      <div class="dep-card"><div>📊 ศูนย์บริหารข้อมูล (OC)</div><div class="role">Operations Center</div></div>
+      <div class="dep-card"><div>🧬 ศูนย์โอมิกส์ CMUTEAM</div><div class="role">Omics Health Sciences</div></div>
+    </div>
+    <div class="vconn"></div>
+
+    <!-- ภาควิชา -->
+    <div class="tree-lbl">22 ภาควิชา</div>
+    <div class="dept-grid">
+      <div class="dept-tag">กายวิภาคศาสตร์</div><div class="dept-tag">จักษุวิทยา</div>
+      <div class="dept-tag">จิตเวชศาสตร์</div><div class="dept-tag">ชีวเคมี</div>
+      <div class="dept-tag">นิติเวชศาสตร์</div><div class="dept-tag">พยาธิวิทยา</div>
+      <div class="dept-tag">เภสัชวิทยา</div><div class="dept-tag">รังสีวิทยา</div>
+      <div class="dept-tag">วิสัญญีวิทยา</div><div class="dept-tag">เวชศาสตร์ครอบครัว</div>
+      <div class="dept-tag">เวชศาสตร์ฉุกเฉิน</div><div class="dept-tag">เวชศาสตร์ชุมชน</div>
+      <div class="dept-tag">เวชศาสตร์ฟื้นฟู</div><div class="dept-tag">ศัลยศาสตร์</div>
+      <div class="dept-tag">สรีรวิทยา</div><div class="dept-tag">สูติ-นรีเวชวิทยา</div>
+      <div class="dept-tag">โสต-ศอ-นาสิก</div><div class="dept-tag">อายุรศาสตร์</div>
+      <div class="dept-tag">กุมารเวชศาสตร์</div><div class="dept-tag">จุลชีววิทยา</div>
+      <div class="dept-tag">ออร์โธปิดิกส์</div><div class="dept-tag">ศัลยศาสตร์ตกแต่ง</div>
+    </div>
+  </div>
+
+  <div class="note note-amber" style="margin-top:26px;">
+    ⚠️ <strong>หมายเหตุ:</strong> รองคณบดีด้านการศึกษาหลังปริญญาและด้านสื่อสารองค์กรยืนยันจากข่าวแถลงข่าวปี 2568 หากต้องการข้อมูลล่าสุดกรุณาตรวจสอบที่ <strong>med.cmu.ac.th/web/about-medcmu/executive-team/</strong>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════
+     PAGE 2 · VMC
+══════════════════════ -->
+<div id="pg-vmc" class="page">
+<div class="container">
+
+  <div class="sec-hd">
+    <h2>คณะแพทยศาสตร์ มช.</h2>
+    <p>Vision · Mission · Core Values <span class="vpill">✓ medhri.com + QAunit</span></p>
+  </div>
+
+  <!-- Vision + Mission side by side -->
+  <div class="vmc-2col">
+    <div class="vm-card vm-vision">
+      <div class="vm-ey">🔭 VISION · วิสัยทัศน์</div>
+      <div class="vm-q">"A Trustworthy Medical School improving Sustainable Humanity Well-Being"</div>
+      <div class="vm-sub">"โรงเรียนแพทย์ที่น่าเชื่อถือ มุ่งยกระดับสุขภาวะที่ยั่งยืนของมวลมนุษยชาติ"</div>
+      <div class="vm-src">
+        <div class="lbl">ที่มา</div>
+        <p>ยืนยันจากหลักสูตร <strong>"The Journey for New Employee"</strong> บน MeDHRI LMS ซึ่งกำหนดให้บุคลากรใหม่ทุกคนทราบและเข้าใจวิสัยทัศน์นี้</p>
+      </div>
+    </div>
+    <div class="vm-card vm-mission">
+      <div class="vm-ey">🎯 MISSION · พันธกิจ 3 ด้าน</div>
+      <div class="vm-q" style="font-size:13px; color:var(--slate); margin-bottom:14px;">ยกระดับสุขภาพและสุขภาวะที่ยั่งยืนของมนุษยชาติ</div>
+      <div class="mi-row">
+        <div class="mi-let">M</div>
+        <div>
+          <div class="mi-t">Medical Education</div>
+          <div style="font-size:12.5px; color:var(--ink); margin-bottom:2px;">ผลิตบัณฑิตที่มีคุณภาพ คุณธรรม เป็นสากล</div>
+          <div class="mi-s">To produce internationalized medical graduates of high quality and good virtue</div>
+        </div>
+      </div>
+      <div class="mi-row teal">
+        <div class="mi-let">E</div>
+        <div>
+          <div class="mi-t">Excellence in Research</div>
+          <div style="font-size:12.5px; color:var(--ink); margin-bottom:2px;">สร้างสรรค์งานวิจัยและนวัตกรรมระดับสากล</div>
+          <div class="mi-s">To conduct medical research & innovation to international standards</div>
+        </div>
+      </div>
+      <div class="mi-row blue">
+        <div class="mi-let">D</div>
+        <div>
+          <div class="mi-t">Distinguished Healthcare</div>
+          <div style="font-size:12.5px; color:var(--ink); margin-bottom:2px;">ให้บริการสุขภาพที่ได้มาตรฐานระดับสากล</div>
+          <div class="mi-s">To provide international-standard healthcare services</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Strategic Framework -->
+  <div class="strat-bar">
+    <div class="strat-lbl">Strategic Framework · MEDCMU (2568–2572)</div>
+    <div class="sc hi"><div class="sc-L">M</div><div class="sc-w">Modernized<br>Workforce</div></div>
+    <div class="sc"><div class="sc-L">E</div><div class="sc-w">Excellence in<br>Research</div></div>
+    <div class="sc"><div class="sc-L">D</div><div class="sc-w">Distinguished<br>Healthcare</div></div>
+    <div class="sc"><div class="sc-L">C</div><div class="sc-w">Collaborative<br>Organization</div></div>
+    <div class="sc"><div class="sc-L">M</div><div class="sc-w">Medical<br>Education</div></div>
+    <div class="sc"><div class="sc-L">U</div><div class="sc-w">Uplifting<br>Society</div></div>
+  </div>
+  <div class="note note-teal" style="margin-top:-10px; margin-bottom:26px;">
+    🎯 <strong>M – Modernized Workforce</strong> เป็นยุทธศาสตร์ที่ MeDHRI รับผิดชอบขับเคลื่อนโดยตรง ผ่านระบบ PMS, Competency Framework และโปรแกรมพัฒนาบุคลากร
+  </div>
+
+  <!-- CQIT -->
+  <div class="sec-hd" style="margin-top:28px;">
+    <h2>Core Values · ค่านิยมองค์กร "CQIT"</h2>
+    <p>คณะแพทยศาสตร์ มช. · ยืนยันจาก medhri.com/medcmu-pms/cqit-our-corporate-values <span class="vpill">✓ verified</span></p>
+  </div>
+  <div class="cv-grid" style="margin-bottom:28px;">
+    <div class="cv-card cv-C">
+      <div class="cv-bg">C</div>
+      <div class="cv-badge">C</div>
+      <div class="cv-title">Customer Focus</div>
+      <div class="cv-en">มุ่งเน้นผู้รับบริการ</div>
+      <div class="cv-desc">เต็มใจให้บริการ · ตอบสนองความต้องการ · ประกันเวลา · พัฒนาระบบให้ประทับใจ</div>
+    </div>
+    <div class="cv-card cv-Q">
+      <div class="cv-bg">Q</div>
+      <div class="cv-badge">Q</div>
+      <div class="cv-title">Quality</div>
+      <div class="cv-en">คุณภาพ</div>
+      <div class="cv-desc">ทำงานได้ผลตามเป้า · ระบบมีคุณภาพ · พัฒนาต่อเนื่อง · มาตรฐาน TQC · HA · WFME</div>
+    </div>
+    <div class="cv-card cv-I">
+      <div class="cv-bg">I</div>
+      <div class="cv-badge">I</div>
+      <div class="cv-title">Innovation</div>
+      <div class="cv-en">นวัตกรรม</div>
+      <div class="cv-desc">สร้างสรรค์นวัตกรรม · เปิดรับความรู้ใหม่ · Digital Transformation · เทคโนโลยีการแพทย์</div>
+    </div>
+    <div class="cv-card cv-T">
+      <div class="cv-bg">T</div>
+      <div class="cv-badge">T</div>
+      <div class="cv-title">Teamwork</div>
+      <div class="cv-en">การทำงานเป็นทีม</div>
+      <div class="cv-desc">ร่วมมือกัน · สร้างพลังร่วม · สื่อสารเปิดเผย · เคารพความแตกต่าง</div>
+    </div>
+  </div>
+
+  <!-- E-CMU -->
+  <div class="sec-hd">
+    <h2>ค่านิยม "E-CMU" — ระดับมหาวิทยาลัยเชียงใหม่</h2>
+    <p>ยืนยันจาก medhri.com/e-cmu · w1.med.cmu.ac.th/qaunit <span class="vpill">✓ verified</span></p>
+  </div>
+  <div class="ecmu-grid">
+    <div class="ec-card ec-E">
+      <div class="ec-L" style="color:#f97316;">E</div>
+      <div class="ec-w">Excellence</div>
+      <div class="ec-e-s">มุ่งมั่นสู่ความเป็นเลิศ</div>
+      <div class="ec-desc">คุณภาพและความเป็นเลิศในทุกด้านของพันธกิจ</div>
+    </div>
+    <div class="ec-card ec-C">
+      <div class="ec-L" style="color:#a21caf;">C</div>
+      <div class="ec-w">Community Engagement</div>
+      <div class="ec-e-s">เชิดชูรับใช้สังคม</div>
+      <div class="ec-desc">จิตสำนึกรับผิดชอบต่อสังคมและชุมชน</div>
+    </div>
+    <div class="ec-card ec-M">
+      <div class="ec-L" style="color:#b45309;">M</div>
+      <div class="ec-w">Morality</div>
+      <div class="ec-e-s">นิยมในหลักธรรม</div>
+      <div class="ec-desc">ปฏิบัติงานด้วยคุณธรรม จริยธรรม โปร่งใส</div>
+    </div>
+    <div class="ec-card ec-U">
+      <div class="ec-L" style="color:#0369a1;">U</div>
+      <div class="ec-w">Unity</div>
+      <div class="ec-e-s">รวมพลังเป็นหนึ่งเดียว</div>
+      <div class="ec-desc">ทำงานร่วมกันด้วยพลังสามัคคีและเป็นอันหนึ่งอันเดียวกัน</div>
+    </div>
+  </div>
+
+  <div class="note note-teal" style="margin-top:18px;">
+    ✅ <strong>แหล่งยืนยัน:</strong> วิสัยทัศน์ — lms.medhri.com (The Journey for New Employee) · พันธกิจ 3 ด้าน — medhri.com/medcmu-pms (อัพเดต ต.ค. 2566) · CQIT — medhri.com/medcmu-pms/cqit-our-corporate-values · E-CMU — medhri.com/e-cmu
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════
+     PAGE 3 · MeDHRI
+══════════════════════ -->
+<div id="pg-medhri" class="page">
+<div class="container">
+
+  <div class="medhri-top">
+    <div class="ey">🔭 VISION · วิสัยทัศน์ (ยืนยันจาก medhri.com/about-medhri · ม.ค. 2569)</div>
+    <div class="qt">"มุ่งสู่การเป็นองค์กรสมรรถนะสูง ที่เสริมศักยภาพให้บุคลากร<br>พร้อมตอบสนองและให้บริการแก่ผู้มีส่วนได้ส่วนเสียทุกภาคส่วน<br>ด้วยมาตรฐานสากล"</div>
+    <div class="en">"To be the high-performance organization where empower people to better serve stakeholders with the international standards"</div>
+  </div>
+
+  <!-- พันธกิจ 3 เสา -->
+  <div class="sec-hd">
+    <h2>พันธกิจ MeDHRI — 3 เสาหลัก</h2>
+    <p>ยืนยันจาก medhri.com/about-medhri (อัพเดต 22 ม.ค. 2569) <span class="vpill">✓ verified</span></p>
+  </div>
+  <div class="m3-grid">
+    <div class="m3">
+      <div class="m3-n">1</div>
+      <h4>พัฒนาและขับเคลื่อนแผนกลยุทธ์ HR</h4>
+      <p>สร้าง ส่งเสริม และขับเคลื่อนแผนดำเนินงาน นโยบายหรือโครงการที่สอดคล้องกับแผนกลยุทธ์คณะฯ เพื่อสร้างความผูกพันบุคลากรทุกระดับ สู่การเป็นองค์กรแห่งความสุขอย่างยั่งยืน ด้วยค่านิยมและวัฒนธรรมองค์กรที่เป็นเลิศ</p>
+    </div>
+    <div class="m3">
+      <div class="m3-n">2</div>
+      <h4>ยกระดับการพัฒนาศักยภาพบุคลากร</h4>
+      <p>พัฒนาบุคลากรให้มีความรู้ความสามารถทั้งด้านทักษะวิชาชีพ การบริหารจัดการ และทักษะที่จำเป็น ด้วยการวิเคราะห์ PMS และ Competency เพื่อนำสู่การเรียนรู้ตลอดชีวิต (Lifelong Learning)</p>
+    </div>
+    <div class="m3">
+      <div class="m3-n">3</div>
+      <h4>ถ่ายทอดและแบ่งปันองค์ความรู้</h4>
+      <p>แบ่งปันองค์ความรู้ของคณะแพทยศาสตร์ มช. ให้แก่ชุมชนและบุคลากรภายนอกผู้สนใจ เพื่อส่งเสริมทักษะการเรียนรู้ตลอดชีวิตและการพัฒนาอย่างยั่งยืน</p>
+    </div>
+  </div>
+
+  <!-- ยุทธศาสตร์หลัก -->
+  <div class="sec-hd">
+    <h2>ยุทธศาสตร์หลักที่ MeDHRI ขับเคลื่อน</h2>
+    <p>ภายใต้วาระบริหาร พ.ศ. 2568–2572</p>
+  </div>
+  <div class="strat-ctx" style="margin-bottom:24px;">
+    <div class="lbl">⚡ ยุทธศาสตร์หลัก 3 ด้าน</div>
+    <div class="pills">
+      <div class="pill pill-t"><h6>M – Modernized Workforce</h6><p>พัฒนาทักษะบุคลากรให้ทันโลก · Upskill / Reskill / Future Skills</p></div>
+      <div class="pill pill-g"><h6>Employee Engagement</h6><p>สร้างความผูกพันบุคลากรสู่ Happy Organization อย่างยั่งยืน</p></div>
+      <div class="pill pill-p"><h6>High Performance Org</h6><p>มุ่งสู่องค์กรสมรรถนะสูงมาตรฐานสากล · PMS · OKRs</p></div>
+    </div>
+  </div>
+
+  <!-- บริการ -->
+  <div class="sec-hd">
+    <h2>บริการหลักของ MeDHRI</h2>
+    <p>ยืนยันจาก medhri.com/about-medhri <span class="vpill">✓ verified</span></p>
+  </div>
+  <div class="svc-grid" style="margin-bottom:26px;">
+    <div class="svc svc-T"><div class="svc-i">🏢</div><div class="svc-t">In-House Training</div><div class="svc-s">ฝึกอบรมภายในองค์กร</div></div>
+    <div class="svc svc-B"><div class="svc-i">🌐</div><div class="svc-t">Public Training</div><div class="svc-s">ฝึกอบรมภายนอกองค์กร</div></div>
+    <div class="svc svc-G"><div class="svc-i">💼</div><div class="svc-t">MeDHRI Consult</div><div class="svc-s">ให้คำปรึกษาพัฒนาองค์กร</div></div>
+    <div class="svc svc-P"><div class="svc-i">💻</div><div class="svc-t">LMS</div><div class="svc-s">ระบบจัดการเรียนรู้ออนไลน์</div></div>
+  </div>
+
+  <!-- ทีมงาน -->
+  <div class="sec-hd">
+    <h2>ทีมงาน MeDHRI</h2>
+    <p>ยืนยันจาก medhri.com/about-medhri</p>
+  </div>
+  <div class="team-grid">
+    <div class="team-card lead">
+      <div class="team-role">ผู้บริหารศูนย์ MeDHRI</div>
+      <div class="team-nm">ศ.พญ.สุรินทร์พร ลิขิตเสถียร</div>
+      <div class="team-pos">รองคณบดีด้านทรัพยากรมนุษย์และวัฒนธรรมองค์กร · กำกับดูแล MeDHRI โดยตรง</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">ผู้ช่วยคณบดีด้าน HR</div>
+      <div class="team-nm">ผศ.นพ.มนัสวี มะโนปัญญา</div>
+      <div class="team-pos">ร่วมรับรางวัล HR Innovation Silver Award 2024 · สนับสนุน MeDHRI</div>
+    </div>
+    <div class="team-card">
+      <div class="team-role">ผู้จัดการศูนย์ MeDHRI</div>
+      <div class="team-nm">พงศ์สถิตย์ คำมูล</div>
+      <div class="team-pos">บริหารจัดการการดำเนินงาน ศูนย์บริหารกลยุทธ์และพัฒนาบุคลากร</div>
+    </div>
+  </div>
+
+  <!-- กลุ่มงาน -->
+  <div style="background:var(--white); border-radius:var(--r); padding:22px 26px; border:1.5px solid var(--border); box-shadow:var(--sh-xs);">
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+      <div>
+        <div class="group-title">กลุ่มงานความเป็นเลิศด้านบริหารกลยุทธ์</div>
+        <div class="group-item">· PMS (OKRs, System, Coaching)</div>
+        <div class="group-item">· Engagement, Culture, Strategic Plan</div>
+        <div class="group-item">· Core Value, Internal Communication</div>
+        <div class="group-item">· Proactive Recruitment</div>
+        <div style="margin-top:8px; font-size:11px; color:var(--teal-d); font-weight:600;">ปฏิภาค วิภาสกุลเด่น · รัฐพงษ์ สุมาทย์</div>
+      </div>
+      <div>
+        <div class="group-title">กลุ่มการเรียนรู้และพัฒนาบุคลากร</div>
+        <div class="group-item">· Competency Development Program</div>
+        <div class="group-item">· หลักสูตรพัฒนาผู้บริหาร (STEM, MES, SASIN)</div>
+        <div class="group-item">· EVOC, ภาษาอังกฤษ, Digital Skills</div>
+        <div class="group-item">· BLS, ACLS, Medical Education</div>
+        <div style="margin-top:8px; font-size:11px; color:var(--teal-d); font-weight:600;">พุฒิเมธ ชุ่มตา · ธนาวุฒิ ปานทา · พาณินี ฮังคำ</div>
+      </div>
+      <div>
+        <div class="group-title">กลุ่มบริหารทั่วไปและระบบสนับสนุน</div>
+        <div class="group-item">· LMS, Website, ระบบหลังบ้าน</div>
+        <div class="group-item">· ครุภัณฑ์, สถานที่จัดตั้งศูนย์</div>
+        <div class="group-item">· AILP, Med-Ed, Basic Fire Fighting</div>
+        <div style="margin-top:8px; font-size:11px; color:var(--teal-d); font-weight:600;">ณัฐวุฒิ พิณโนเอก · อธิป น้อมศิริ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note note-teal" style="margin-top:18px;">
+    📍 <strong>ที่อยู่:</strong> ชั้น 7 อาคารราชนครินทร์ เลขที่ 110 ถ.อินทวโรรส ต.ศรีภูมิ อ.เมือง จ.เชียงใหม่ 50200 &nbsp;·&nbsp; ☎ 0-5393-5226 &nbsp;·&nbsp; 📧 hrdcenter.med@cmu.ac.th &nbsp;·&nbsp; 🌐 medhri.com
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════
+     PAGE 4 · Stakeholders
+══════════════════════ -->
+<div id="pg-stk" class="page">
+<div class="container">
+
+  <div class="sec-hd">
+    <h2>Stakeholders Matrix — HR Strategy & MeDHRI</h2>
+    <p>ผู้มีส่วนได้ส่วนเสียในการขับเคลื่อน HR Strategy · วาระ 2568–2572 <span class="vpill">✓ med.cmu.ac.th + medhri.com</span></p>
+  </div>
+
+  <div class="stk-wrap">
+    <div class="stk-hd">
+      <h3>ตาราง Stakeholders (19 กลุ่ม)</h3>
+      <span>อัพเดต กุมภาพันธ์ 2569 · ✓ ยืนยันจากแหล่งทางการ</span>
+    </div>
+    <div style="overflow-x:auto;">
+    <table class="stk-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ชื่อ / กลุ่ม</th>
+          <th>ตำแหน่ง</th>
+          <th>ประเภท</th>
+          <th>ความเกี่ยวข้องกับ HR Strategy</th>
+          <th>อิทธิพล</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6" class="td-cat">🔵 ระดับผู้บริหารสูงสุด</td></tr>
+        <tr>
+          <td>1</td>
+          <td><div class="td-nm">รศ.นพ.นเรนทร์ โชติรสนิรมิต</div><div class="td-ps">narain.c@cmu.ac.th · 053-935122</div></td>
+          <td>คณบดี (วาระ 2568–2572)</td>
+          <td><span class="badge b-rd">Internal</span><span class="badge b-am">นโยบาย</span></td>
+          <td class="td-rel">อนุมัติแผนกลยุทธ์คณะฯ · กำหนดทิศทาง HR · ประกาศนโยบายบุคลากร · Executive Onboarding</td>
+          <td><span class="inf-hi">⭐⭐⭐ สูงมาก</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><div class="td-nm">ศ.พญ.สุรินทร์พร ลิขิตเสถียร</div><div class="td-ps">surinporn.l@cmu.ac.th</div></td>
+          <td>รองคณบดีด้าน HR & วัฒนธรรมองค์กร<br><span style="color:var(--teal-d); font-size:11px; font-weight:600;">กำกับ MeDHRI โดยตรง</span></td>
+          <td><span class="badge b-tl">Internal</span><span class="badge b-tl">เจ้าภาพ HR</span></td>
+          <td class="td-rel">ขับเคลื่อน HR Strategy ทั้งหมด · MEDCMU Executive Onboarding · HR Innovation Award 2024 · ต่อเนื่องจากวาระก่อน</td>
+          <td><span class="inf-hi">⭐⭐⭐ สูงมาก</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><div class="td-nm">ศ.พญ.อรินทยา พรหมินธิกุล</div><div class="td-ps">ผู้อำนวยการ รพ.มหาราชฯ</div></td>
+          <td>Director, Maharaj Nakorn CMU Hospital</td>
+          <td><span class="badge b-int">Internal</span></td>
+          <td class="td-rel">นโยบายบุคลากรทางการแพทย์และพยาบาล · Transforming Healthcare Teams</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><div class="td-nm">คุณมะลิวรรณ หินทอง</div></td>
+          <td>เลขานุการคณะแพทยศาสตร์</td>
+          <td><span class="badge b-int">Internal</span></td>
+          <td class="td-rel">ประสานงานผู้บริหาร · สนับสนุน HR Strategy · ร่วม HR Innovation Award Team 2024</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr><td colspan="6" class="td-cat">🟢 MeDHRI Core Team</td></tr>
+        <tr>
+          <td>5</td>
+          <td><div class="td-nm">ผศ.นพ.มนัสวี มะโนปัญญา</div></td>
+          <td>ผู้ช่วยคณบดีด้านทรัพยากรบุคคล</td>
+          <td><span class="badge b-tl">MeDHRI</span><span class="badge b-tl">Core</span></td>
+          <td class="td-rel">สนับสนุน HR Strategy · ประสาน MeDHRI · ร่วมรับรางวัล HR Innovation Silver Award 2024</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><div class="td-nm">พงศ์สถิตย์ คำมูล</div></td>
+          <td>ผู้จัดการศูนย์ MeDHRI</td>
+          <td><span class="badge b-tl">MeDHRI</span></td>
+          <td class="td-rel">บริหารจัดการดำเนินงาน · PMS · Engagement · Culture · Proactive Recruitment</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><div class="td-nm">ทีมงาน MeDHRI (7 คน)</div><div class="td-ps">ปฏิภาค · รัฐพงษ์ · พุฒิเมธ · ธนาวุฒิ · พาณินี · ณัฐวุฒิ · อธิป</div></td>
+          <td>HR Development Officers (3 กลุ่มงาน)</td>
+          <td><span class="badge b-tl">MeDHRI</span></td>
+          <td class="td-rel">ออกแบบ-ดำเนินหลักสูตร · ระบบ PMS · Employee Engagement · LMS · Website</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><div class="td-nm">งานบริหารงานบุคคล</div><div class="td-ps">w1.med.cmu.ac.th/personnel</div></td>
+          <td>HR Administration (ปฏิบัติการ)</td>
+          <td><span class="badge b-int">Internal</span></td>
+          <td class="td-rel">งาน HR ปฏิบัติการ: รับสมัคร · สิทธิประโยชน์ · การลา · ระเบียบบุคคล · ประสาน MeDHRI</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr><td colspan="6" class="td-cat">🔷 รองคณบดีที่เกี่ยวข้องกับ HR Strategy</td></tr>
+        <tr>
+          <td>9</td>
+          <td><div class="td-nm">ผศ.นพ.สารนาถ ออรพินท์</div></td>
+          <td>รองคณบดีด้านแผนและยุทธศาสตร์</td>
+          <td><span class="badge b-int">Internal</span></td>
+          <td class="td-rel">บูรณาการ HR Strategy กับแผนกลยุทธ์คณะฯ · กำหนด KPI · ติดตามผล</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><div class="td-nm">ผศ.นพ.เศรษฐพงศ์ บุญศรี</div></td>
+          <td>รองคณบดีด้านพัฒนาคุณภาพองค์กร</td>
+          <td><span class="badge b-int">Internal</span></td>
+          <td class="td-rel">TQM · TQC · เชื่อมโยง HR Excellence กับมาตรฐานองค์กร</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><div class="td-nm">หัวหน้าภาควิชา (22 ภาควิชา)</div></td>
+          <td>Department Heads</td>
+          <td><span class="badge b-int">Internal</span></td>
+          <td class="td-rel">กำหนดความต้องการพัฒนา · ส่งบุคลากรเข้าอบรม MeDHRI · ประเมินผล · ร่วม PMS</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr><td colspan="6" class="td-cat">🟡 บุคลากรผู้รับผลจาก HR Strategy</td></tr>
+        <tr>
+          <td>12</td>
+          <td><div class="td-nm">อาจารย์แพทย์</div></td>
+          <td>Faculty / Clinician-Educator</td>
+          <td><span class="badge b-gy">บุคลากร</span></td>
+          <td class="td-rel">รับผลโดยตรงจาก HR Development · พัฒนาสมรรถนะ Teaching-Research-Service</td>
+          <td><span class="inf-lo">⭐ ปานกลาง</span></td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td><div class="td-nm">บุคลากรสายสนับสนุน</div></td>
+          <td>Support Staff / Admin</td>
+          <td><span class="badge b-gy">บุคลากร</span></td>
+          <td class="td-rel">Re-skill & Up-skill · Happy Organization · สวัสดิการ</td>
+          <td><span class="inf-lo">⭐ ปานกลาง</span></td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td><div class="td-nm">นักวิจัย</div></td>
+          <td>Researchers</td>
+          <td><span class="badge b-gy">บุคลากร</span></td>
+          <td class="td-rel">พัฒนาทักษะวิจัย · นวัตกรรม · Career Path สายวิจัย</td>
+          <td><span class="inf-lo">⭐ ปานกลาง</span></td>
+        </tr>
+        <tr><td colspan="6" class="td-cat">🌐 ภายนอกและเครือข่าย</td></tr>
+        <tr>
+          <td>15</td>
+          <td><div class="td-nm">มหาวิทยาลัยเชียงใหม่ (สำนักงานกลาง)</div></td>
+          <td>Parent University</td>
+          <td><span class="badge b-pu">External</span><span class="badge b-int">กำกับ</span></td>
+          <td class="td-rel">กำหนดระเบียบบุคคล · งบประมาณ · นโยบาย CMU Transformation · "ก้าวใหม่ มช."</td>
+          <td><span class="inf-hi">⭐⭐⭐ สูงมาก</span></td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td><div class="td-nm">เครือข่าย UHosNet</div><div class="td-ps">กลุ่มสถาบันแพทยศาสตร์แห่งประเทศไทย</div></td>
+          <td>คณะอนุกรรมการ HR UHosNet</td>
+          <td><span class="badge b-pu">External</span><span class="badge b-tl">พันธมิตร</span></td>
+          <td class="td-rel">แลกเปลี่ยน Best Practices HR Healthcare · Thailand HR Healthcare Forum</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr>
+          <td>17</td>
+          <td><div class="td-nm">PMAT สมาคมการจัดการงานบุคคล</div></td>
+          <td>Professional HR Association</td>
+          <td><span class="badge b-pu">External</span></td>
+          <td class="td-rel">HR Best Practices · วิทยากร · Thailand HR Innovation Award</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td><div class="td-nm">กสพท. / แพทยสภา</div></td>
+          <td>Regulatory Bodies</td>
+          <td><span class="badge b-pu">External</span></td>
+          <td class="td-rel">มาตรฐานการผลิตแพทย์ · กำกับ Competency Framework ของอาจารย์แพทย์</td>
+          <td><span class="inf-md">⭐⭐ สูง</span></td>
+        </tr>
+        <tr>
+          <td>19</td>
+          <td><div class="td-nm">ผู้ป่วย / ประชาชน</div></td>
+          <td>Ultimate Beneficiary</td>
+          <td><span class="badge b-gy">External</span></td>
+          <td class="td-rel">ผลสุดท้ายของ HR ที่มีประสิทธิภาพ = บุคลากรสมรรถนะสูง = การดูแลที่มีคุณภาพ</td>
+          <td><span class="inf-lo">ทางอ้อม</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="legend-row">
+    <span><span class="inf-hi">⭐⭐⭐ สูงมาก</span> — กำหนดนโยบาย / อนุมัติทรัพยากร / ตัดสินใจขั้นสุดท้าย</span>
+    <span><span class="inf-md">⭐⭐ สูง</span> — มีส่วนร่วมโดยตรงในการดำเนินงาน HR</span>
+    <span><span class="inf-lo">⭐ ปานกลาง</span> — ได้รับผลหรือมีส่วนร่วมทางอ้อม</span>
+  </div>
+
+  <div class="note note-teal" style="margin-top:12px;">
+    ✅ <strong>แหล่งยืนยัน:</strong> med.cmu.ac.th/web/about-medcmu/executive-team/ · medhri.com · medhri.com/about-medhri · ข่าวแถลงข่าวปี 2568 · ข่าว ม.ค.–ก.พ. 2569
+  </div>
+</div>
+</div>
+
+<!-- ════ FOOTER ════ -->
+<div class="footer">
+  ✓ ข้อมูลอัพเดตจากแหล่งทางการ &nbsp;·&nbsp;
+  <a href="https://www.med.cmu.ac.th" target="_blank">med.cmu.ac.th</a> &nbsp;·&nbsp;
+  <a href="https://www.medhri.com" target="_blank">medhri.com</a> &nbsp;·&nbsp;
+  อัพเดตล่าสุด กุมภาพันธ์ 2569
+</div>
+
+<script>
+function go(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pg-' + name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
